@@ -2,7 +2,7 @@ name: Deploy site estático no S3 + CloudFront
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   deploy:
