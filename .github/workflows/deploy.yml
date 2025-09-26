@@ -15,6 +15,7 @@ jobs:
       - name: Instalar AWS CLI
         run: |
           sudo apt update
+          sudo apt install -y python3-pip unzip
           sudo apt install -y awscli
 
       - name: Sincronizar arquivos com S3
