@@ -26,7 +26,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: |
-          aws s3 sync ./ s3://$BUCKET_NAME --delete --exclude ".*" --acl bucket-owner-full-control \
+          aws s3 sync ./ s3://$BUCKET_NAME --delete \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --exclude ".gitignore" \
