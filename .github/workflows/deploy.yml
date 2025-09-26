@@ -1,28 +1,30 @@
-name: Deploy estático no S3 + CloudFront
+name: Deploy site estático no S3 + CloudFront
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   deploy:
+    name: Deploy estático
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Instalar AWS CLI
+      - name: Instalar AWS CLI via pip
         run: |
           sudo apt update
           sudo apt install -y python3-pip unzip
-          sudo apt install -y awscli
+          pip install --upgrade awscli
 
       - name: Sincronizar arquivos com S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: |
           aws s3 sync ./ s3://$BUCKET_NAME --delete --acl bucket-owner-full-control
 
@@ -31,6 +33,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           aws cloudfront create-invalidation \
             --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
